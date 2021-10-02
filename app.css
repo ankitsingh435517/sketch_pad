@@ -1,0 +1,29 @@
+*{
+    padding:0px;
+    margin:0px;
+}
+.sketch_Pad_Container{
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   margin-top: 5rem;
+   border: 1px solid red;
+}
+#sketch_Pad {
+    border: 1px solid black;
+    box-shadow: 2px 2px lightgray;
+    height: 300px;
+    width: 300px;
+    display: flex;
+    flex-direction: column;
+}
+.each_grid_div{
+    
+    /* border: 1px solid blue; */
+}
+.change_To_Black_Color{
+    background: black;
+}
+.row_div{
+    display: flex;
+}
