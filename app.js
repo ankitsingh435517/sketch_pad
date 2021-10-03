@@ -1,6 +1,19 @@
 
 let body = document.querySelector('body');
 
+let header = document.createElement('div');
+header.classList.add('header');
+
+let h1_for_header = document.createElement('h1');
+h1_for_header.textContent = 'Sketch pad';
+h1_for_header.classList.add('header_title')
+
+header.appendChild(h1_for_header);
+
+body.appendChild(header);
+
+let options_div = document.createElement('div');
+
 let sketch_Pad_Container = document.createElement('div');
 
 sketch_Pad_Container.classList.add('sketch_Pad_Container');
@@ -27,6 +40,12 @@ function constructGrid(side){
         }    
         sketch_Pad.appendChild(row_div);
     }
+
+    let each_grid_div = document.querySelectorAll('.each_grid_div');
+
+    each_grid_div.forEach(each_div => {
+    each_div.addEventListener('mouseover', changeColor)
+})
     
 }
 
@@ -36,32 +55,74 @@ sketch_Pad_Container.appendChild(sketch_Pad);
 body.appendChild(sketch_Pad_Container);
 
 
+// grid construction--------------------------->
+constructGrid(22);
+
+let slider_div = document.createElement('div');
+let slider_input = document.createElement('input');
+
+slider_input.setAttribute('type','range');
+slider_input.setAttribute('min','1');
+slider_input.setAttribute('max','64');
+slider_input.setAttribute('value','22');
+slider_input.setAttribute('id','myRange');
+
+slider_input.classList.add('slider');
+
+let h1_for_range_output = document.createElement('h1');
+h1_for_range_output.textContent = `${slider_input.value} X ${slider_input.value}`;
+h1_for_range_output.setAttribute('id','range_output');
+
+slider_input.oninput = function() {
+    h1_for_range_output.textContent = `${this.value} X ${this.value}`;
+    removeGrid();
+    constructGrid(this.value);
+}
 
 
+
+
+function removeGrid(){
+    while(sketch_Pad.firstChild){
+        console.log(sketch_Pad.lastChild);
+        sketch_Pad.removeChild(sketch_Pad.lastChild)
+    }
+}
+
+
+let pen = document.createElement('button');
+pen.textContent = 'pen'
+pen.classList.add('pen');
+pen.classList.add('selected_btn');
+
+let pen_selected = true;
+
+options_div.appendChild(pen);
 
 
 
 // event listeners
-constructGrid(14);
 
-let each_grid_div = document.querySelectorAll('.each_grid_div');
 
-each_grid_div.forEach(each_div => {
-    each_div.addEventListener('mouseover', changeColor)
-})
+
+
+
+
 
 let erase_btn = document.createElement('button');
-erase_btn.textContent = 'erase';
+erase_btn.textContent = 'eraser';
+erase_btn.classList.add('erase_btn');
 
-body.appendChild(erase_btn);
+options_div.appendChild(erase_btn);
 
 
 let erase = false;
 
-erase_btn.addEventListener('click', () => { erase = !erase })
+erase_btn.addEventListener('click', () => { erase = true })
 
 let clear_btn = document.createElement('button');
 clear_btn.textContent = 'clear';
+clear_btn.classList.add('clear_btn')
 
 clear_btn.addEventListener('click', clearAll);
 
@@ -74,7 +135,7 @@ function clearAll(){
     })
 }
 
-body.appendChild(clear_btn)
+options_div.appendChild(clear_btn)
 
 let rainbow = false;
 
@@ -83,17 +144,15 @@ function changeColor(e){
     if(rainbow)
      {
         changeColorRainbow(e);
-     }else{
-        console.log('changeColor() ------> fired');
-    
+     }else{    
     
         let selected_div = document.querySelector(`#${e.target.getAttribute('id')}`)
-        console.log(selected_div)
+        
         if(erase){
-            selected_div.classList.remove('change_To_Black_Color');
+            selected_div.style.cssText += 'background-color: white'
             selected_div.classList.remove('colored');
         }else{
-            selected_div.classList.add('change_To_Black_Color');
+            selected_div.style.cssText += 'background-color: black'
             selected_div.classList.add('colored');
         }
      }
@@ -103,16 +162,16 @@ function changeColor(e){
 
 let rainbow_btn = document.createElement('button');
 rainbow_btn.textContent = 'rainbow';
+rainbow_btn.classList.add('rainbow_btn');
 
-rainbow_btn.addEventListener('click', () => { rainbow = !rainbow });
+rainbow_btn.addEventListener('click', () => { rainbow = true });
 
-body.appendChild(rainbow_btn);
+options_div.appendChild(rainbow_btn);
 
 function changeColorRainbow(e){
-    console.log('changeColorRainbow() ------> fired');
-
+    
     let selected_div = document.querySelector(`#${e.target.getAttribute('id')}`)
-    console.log(selected_div)
+    
     if(erase){
         selected_div.style.cssText += 'background-color: white;';
         selected_div.classList.remove('colored');
@@ -125,3 +184,47 @@ function changeColorRainbow(e){
 function randomColor(){
   return Math.floor(Math.random()*16777215).toString(16);
 }
+
+let container = document.createElement('div');
+container.classList.add('container')
+
+container.appendChild(options_div);
+container.appendChild(sketch_Pad_Container);
+body.appendChild(container);
+
+
+
+//   ui ------------------------>
+
+options_div.classList.add('options_div');
+
+rainbow_btn.addEventListener('click', () => {
+    rainbow_btn.classList.add('selected_btn');
+    clear_btn.classList.remove('selected_btn');
+    erase_btn.classList.remove('selected_btn');
+    pen.classList.remove('selected_btn');
+    erase = false;
+
+})
+
+erase_btn.addEventListener('click', () => {
+    erase_btn.classList.add('selected_btn');
+    clear_btn.classList.remove('selected_btn');
+    rainbow_btn.classList.remove('selected_btn');
+    pen.classList.remove('selected_btn');
+})
+
+pen.addEventListener('click', () => {
+    pen.classList.add('selected_btn');
+    erase_btn.classList.remove('selected_btn');
+    rainbow_btn.classList.remove('selected_btn');
+    rainbow = false;
+    erase = false;
+})
+
+
+slider_div.appendChild(h1_for_range_output)
+slider_div.appendChild(slider_input);
+options_div.appendChild(slider_div);
+
+
